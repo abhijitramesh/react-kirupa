@@ -277,4 +277,176 @@ Also lets style it a bit so that it looks good.
 ```
 
 The behavior element allows us to access the buttons type.
+
 [Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/components.html)
+
+## Styling Components
+
+Let's start with our same old started code with some tiny modifications and get started with some styling.
+
+``` html
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>React! React! React!</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+  </style>
+</head>
+ 
+<body>
+      <div id="container"></div>
+</body>
+```
+
+
+The only modification is that I have added some style and put a div inside the body tag.
+
+Let's get down so defining some components, We are gonna style some vowels and since vowels are letters lets call our Components Letters.
+And call the same to ReactDOM.
+
+``` html
+<body>
+     <div id="container"></div>
+
+    <script type="text/babel">
+    var destination = document.querySelector("#container");
+    class Letter extends React.Component {
+    render() {
+      return(
+        <div>
+          {this.props.children}
+        </div>
+      );
+    }
+  }
+
+    ReactDOM.render(
+        <div>
+            <Letter>A</Letter>
+            <Letter>E</Letter>
+            <Letter>I</Letter>
+            <Letter>O</Letter>
+            <Letter>U</Letter>
+        </div>,
+        destination
+    );
+  </script>
+</body>
+```
+The component we have created here just displays the child component of it.
+
+Now that is great and all but lets make it more pleasing.
+
+The very traditional way to style this would be to look at the tree of div and then depending upon that add some styling which basically means,
+
+``` css
+div div div {
+  padding: 10px;
+  margin: 10px;
+  background-color: #ffde00;
+  color: #333;
+  display: inline-block;
+  font-family: monospace;
+  font-size: 32px;
+  text-align: center;
+}
+```
+
+We can get away with styling like this in a small project but as our project gets bigger and bigger this would get more complicated. The next approach we can follow is to move to a class based approach for styling.
+
+Lets put this styling in a class in our style tag.
+
+``` css
+.letter{
+   padding: 10px;
+  margin: 10px;
+  background-color: #ffde00;
+  color: #333;
+  display: inline-block;
+  font-family: monospace;
+  font-size: 32px;
+  text-align: center;   
+}
+```
+
+For this to be reflected in our components we just need to specify the same inside our div tag.
+
+Compared to calling the class as simply class here we are calling it is className because class is a reserved keyword in javascript and hence the syntax is to use className.
+
+Up until now we are kind of following the css way of styling lets move on to the React way of styling content.
+
+React uses something called as a styling object for styling our components.
+
+lets define our styling object inside render of our Letter component,
+
+``` jsx
+var letterStyling = {
+        padding:10,
+        margin:10,
+        backgroundColor: "#ffde00",
+        color: "#333",
+        display: "inline-block",
+        fontFamily: "monospace",
+        fontSize:32,
+        textAlign: "center"
+    };
+```
+Notice that we are not using css style of naming like background-color instead we are using something like backgroundColor this is because what we are defining here should be more javascript friendly.
+
+Now we need to mention this style inside our div 
+``` jsx
+return(
+            <div style={letterStyle}>
+                {this.props.children}
+            </div>
+        );
+```
+
+here we are referring our style object letterStyle by using curly brackets so that React knows that the expression inside should be evaluated.
+
+Again, this is cool and all but whats so cool sticking with one background color lets style it up a bit.
+
+We just need to pass in an argument in our DOM render so that we can specify a color for each render so lets change the passing side first.
+
+``` jsx
+ ReactDOM.render(
+        <div>
+            <Letter bgcolor="#58B3FF">A</Letter>
+            <Letter bgcolor="#FF605F">E</Letter>
+            <Letter bgcolor="#FFD52E">I</Letter>
+            <Letter bgcolor="#49DD8E">O</Letter>
+            <Letter bgcolor="#AE99FF">U</Letter>
+        </div>,
+        destination
+    );
+```
+and for these changes to reflect we need to make it aware to our Letter Component styling object.
+
+``` jsx
+ render() {
+    var letterStyling = {
+        padding:10,
+        margin:10,
+        backgroundColor: this.props.bgcolor,
+        color: "#333",
+        display: "inline-block",
+        fontFamily: "monospace",
+        fontSize:32,
+        textAlign: "center"
+    };
+```
+
+Now this looks so much better and also we learned how to use styling objects to style our components.
+
+
+[Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/stylingComponents.html)
