@@ -2,7 +2,7 @@
 
 This readme contains the notes I wrote and while following along Kirap React for Beginners tutorial.
 
-## Building the first React Applicaiton
+## Building the first React Application
 #### JSX
 
 Unlike other websites we have seen React uses something known as JSX, JSX allows us to use html like tags inside javascript which allows us to create good looking UI as well as manipulate its functions. What react does is take this code and convert it into normal JS,HTML and CSS so that our browser can understand the same.
@@ -91,3 +91,190 @@ Here we are first defining a background for the container and added a 50px paddi
 This is just a basic understanding of the render method.
 
 [Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/hello_react.html)
+
+## Components in React
+Components are the basic building blocks of a react application, Every item in a page is called a component and we refer them also in a similar manner.
+
+
+#### Function in Java Script
+
+In JavaScript we use function to avoid boiler plate code. There are lots of similarities with functions and React Components.
+
+Lets say we have a this snippet of code.
+
+``` javascript
+var speed = 10;
+var time = 5;
+alert(speed * time);
+  
+var speed1 = 85;
+var time1 = 1.5;
+alert(speed1 * time1);
+  
+var speed2 = 12;
+var time2 = 9;
+alert(speed2 * time2);
+  
+var speed3 = 42;
+var time3 = 21;
+alert(speed3 * time3);
+```
+
+Instead of doing so much we can just write a function
+``` js
+function getDistance(speed, time) {
+    var result = speed * time;
+    alert(result);
+}
+```
+
+and then do invocation to the same.
+
+``` js
+getDistance(10, 5);
+getDistance(85, 1.5);
+getDistance(12, 9);
+getDistance(42, 21);
+```
+
+This looks much cleaner and let us reuse code without much hassle.
+
+#### Let's change the way we look at UI 
+
+We are going to take a look at the hello_react.html code again and then make some changed to the same.
+
+``` js
+var destination = document.querySelector("#container")
+        ReactDOM.render(
+          <h1>Batman</h1>,
+            destination
+```
+
+Lets us change this a bit and add some more elements to the screen.
+
+``` js
+ var destination = document.querySelector("#container")
+        ReactDOM.render(
+            <div>
+          <h3><i>Batman</i></h3>
+          <h3><i>Superman</i></h3>
+          <h3><i>Wonder Women</i></h3>
+          <h3><i>Green Lantern</i></h3>
+          <h3><i>Aquaman</i></h3>
+          </div>,
+            destination
+        );
+```
+
+See now we have added some more elements to the screen and have changed the html tag to h3 just for better readability. Also have made them italic.
+
+
+And this is lot of work we have to go through each one of the elements to modify them and change them and make them italics and and so on, instead of doing all this we can adapt some of the cool factor of function this is called React Components.
+
+
+#### Meet React Components
+
+Lets start by creating a React Component Lets call it hello world.
+
+``` jsx
+class HelloWorld exteds React.Compponet{
+    render(){
+
+    }
+}
+```
+
+This is what the skeleton of our component class looks like. Notice that instead of return we are using something called render here its the same render that we have used in our code before this also deals with modifying the jsx within our code. Lets add some stuff into this now.
+
+
+``` jsx
+class HelloWorld exteds React.Compponet{
+    render(){
+        <p> Hello, componetized world!</p>
+    }
+}
+```
+
+To display this into the screen we can just call it like we would call any html elements.
+
+``` jsx
+React.DOM.render(
+    <HelloWorld/>,
+    document.querySelector("#container")
+);
+
+```
+
+Just to have control over the stuff we are putting to the screen lets wrap the stuff in a div tag and also call more and more HelloWorld tags.
+
+This is all fun but we are not passing in any arguments and that is not something cool so lets to that to pass in javascript arguments we just need to close them in {}.
+
+So how that would look like is
+``` jsx
+    class HelloWorld extends React.Component{
+        render(){
+            return <p>Hello, {this.props.greetTarget}!</p>
+        }
+    }
+```
+
+And lets modify the stuff the calls as well
+``` jsx
+ ReactDOM.render(
+            <div>
+            <HelloWorld greetTarget="Batman"/>
+            <HelloWorld greetTarget="Superman"/>
+            <HelloWorld greetTarget="Wonder Women"/>
+            <HelloWorld greetTarget="Green Lantern"/>
+            <HelloWorld greetTarget="Aquaman"/>
+            </div>,
+            destination
+        );
+```
+
+Here we are using just one property the this.prop is handling all that but we can have many more properties if we need and this.props will handle all of them.
+
+#### Dealing with children
+
+Children might be a bit hard to deal with but not in React though they are very obedient.
+
+Lets create a new component to add button to our screen.
+
+``` jsx
+     class Buttonify extends React.Component {
+  render() {
+    return(
+      <div>
+        <button type={this.props.behavior}>{this.props.children}</button>
+      </div>
+    );
+  }
+}
+```
+
+And we have to add this to our body so that we can display it.
+
+``` jsx
+ ReactDOM.render(
+            <div>
+            <HelloWorld greetTarget="Batman"/>
+            <HelloWorld greetTarget="Superman"/>
+            <HelloWorld greetTarget="Wonder Women"/>
+            <HelloWorld greetTarget="Green Lantern"/>
+            <HelloWorld greetTarget="Aquaman"/>
+            <Buttonify behavior="submit"> SEND DATA</Buttonify>
+            </div>,
+            destination
+        );
+```
+
+Also lets style it a bit so that it looks good.
+
+``` css
+      #button{
+          font-size: 64px;
+      }
+```
+
+The behavior element allows us to access the buttons type.
+[Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/components.html)
