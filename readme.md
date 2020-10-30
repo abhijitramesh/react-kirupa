@@ -804,3 +804,164 @@ class Shirt extends React.Component{
 Once this is done everything should work as normal, this is kind of a convenient way to do this but is it the best way probably not because having an intermediate component seems like a little bit too much, what if there was a way to transfer the properties without having to use an intermediate component this is called redux.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/transferingProperties.html)
+
+Till now the states that we are dealing with our kind of what we an call stateless which means they have values which are passed to it but they do not necessary do anything after they come alive. They are immutable once the values are set.
+
+So we need a better method to manage the store data in components this is where states come to play.
+
+## Using States
+
+Lets make a component that shows the number of lightning that strikes every second when we open the application.
+
+This is basically a counter that increments 100 every second.
+
+Here we are using a starter code which is basically some codepen,
+
+``` jsx
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>Dealing with State</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+ 
+<body>
+  <div id="container"></div>
+   
+  <script type="text/babel">
+    class LightningCounter extends React.Component {
+      render() {
+        return (
+          <h1>Hello!</h1>
+        );
+      }
+    }
+ 
+    class LightningCounterDisplay extends React.Component {
+      render() {
+        var divStyle = {
+          width: 250,
+          textAlign: "center",
+          backgroundColor: "black",
+          padding: 40,
+          fontFamily: "sans-serif",
+          color: "#999",
+          borderRadius: 10
+        };
+ 
+        return (
+          <div style={divStyle}>
+            <LightningCounter/>
+          </div>
+        );
+      }
+    }
+ 
+    ReactDOM.render(
+      <LightningCounterDisplay/>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+ 
+</html>
+```
+
+Right now this application does not do much it has a good styling for the Lightning Counter Display. And the other component LightningCounter show a simple Hello text.
+
+#### Getting our counter on
+
+For this we first need to understand what a componentDidMount is this is an API that React Component exposes what this does is just after the component is rendered this method is called. So we can take advantage of this to implement some functionalities.
+
+Lets modify our LightningCounter to implement the counter.
+
+``` jsx
+  class LightningCounter extends React.Component {
+        constructor(props,context){
+            super(props,context);
+            this.state = {
+                strikes:0
+            };
+        }
+      render() {
+        return (
+          <h1>{this.states.strikes}</h1>
+        );
+      }
+    }
+```
+
+Here we have just added a constructor this is simply code that is executed when the component is called every time.
+
+state is a react specific element and what it does is basically its a bank of values.
+
+with that in mind lets also print the state in the render method.
+
+Now that is out of the way lets start out timer for that first we need to make use of the componentDidMount method.
+
+``` jsx
+    class LightningCounter extends React.Component {
+        constructor(props,context){
+            super(props,context);
+            this.state = {
+                strikes:0
+            };
+        }
+        componentDidMount(){
+            setInterval(this.timeTick,1000);
+        }
+      render() {
+        return (
+          <h1>{this.state.strikes}</h1>
+        );
+      }
+    }
+```
+
+Here what we are doing is on a set interval of 1000ms we are calling the timeTick function and as you might have guessed we need to write that as well.
+
+``` jsx
+    class LightningCounter extends React.Component {
+        constructor(props,context){
+            super(props,context);
+            this.state = {
+                strikes:0
+            };
+        }
+        componentDidMount(){
+            setInterval(this.timeTick,1000);
+        }
+        timeTick(){
+            this.setState({
+                strikes: this.state.strikes +100
+            });
+        }
+      render() {
+        return (
+          <h1>{this.state.strikes}</h1>
+        );
+      }
+    }
+```
+
+If you execute this you know that its not working as expected that is because we have forgot to do something.
+
+The problem is that we need to bind the _this_ value inside the timeTick so that it would work as expected.
+
+``` jsx
+ constructor(props,context){
+            super(props,context);
+            this.state = {
+                strikes:0
+            };
+            this.timeTick = this.timeTick.bind(this);
+        }
+```
+
+This should do the trick and now the app is working.
+
+[Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/states.html)
