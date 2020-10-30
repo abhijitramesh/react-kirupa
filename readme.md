@@ -450,3 +450,213 @@ Now this looks so much better and also we learned how to use styling objects to 
 
 
 [Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/stylingComponents.html)
+
+## From Visuals to Components
+
+In real world we would be given a mockup and would be asked to build some UI of from that so there are two easy steps that we need to follow.
+
+1. Identify the major visual elements
+1. Figure out what the component will be
+
+
+Even though this sounds a little bit complicated these are very simple actually.
+
+### Identifying the Major Visual Elements
+
+What this means is we need to take apart our component into more and more simple structures like a visual hierarchy what this will do is give us a better idea on how the visual is grouped and also we don't need to think about the implementation details while we are in this step and just need to focus on how to get the stuff in a nice tree like structure.
+
+### Identifying the Components
+
+From our tree structure we need to figure out what are the components we should be building the best way to approach this is to see if our component is doing more than one thing if so we don't need that component, we need to strike a balance between how few vs too many components once we have figured our how many components there are we can start coding our component.
+
+#### Creating the Component 
+
+As always we will be starting off with our template code.
+
+Noe Lets start building our components we will be making a color pallet which is made up of three components a Square a Label and a Card, for now lets just instantiate this with a simple br label.
+
+
+``` jsx
+class Square extends React.Component{
+        render(){
+            <br/>
+        }
+    }
+    class Label extends React.Component{
+        render(){
+            <br/>
+        }
+        
+    }
+    class Card extends React.Component{
+        render(){
+            <br/>
+        }
+    }
+```
+
+#### The Card component
+
+Lets start of from the top and implement the Card Component,
+
+First we will start by creating our style object.
+
+``` jsx
+class Card extends React.Component {
+  render() {
+    var cardStyle = {
+      height: 200,
+      width: 150,
+      padding: 0,
+      backgroundColor: "#FFF",
+      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
+      filter: "drop-shadow(0px 0px 5px #666)"
+    };
+ 
+    return (
+      <div style={cardStyle}>
+ 
+      </div>
+    );
+  }
+}
+
+```
+
+Here we are adding some styles to our card element with a white background we have added some height and width and also we are adding a drop shadow, we are using a filter to do the same since some of the browser doesn't support this without a pre fix we are adding a WebkitFilter to ensure this works consistently in all browsers further we are just gonna call this in a dic inside our return.
+
+#### The Square component
+
+Now Lets make the color component that is a square component.
+
+``` jsx
+    class Square extends React.Component{
+        render(){
+            var squareStyle={
+                height: 150,
+                backgroundColor: "#FF6663"
+            };
+            return(
+                <div style={squareStyle}>
+                </div>
+            );
+        }
+    }
+```
+
+Now you can se that we have just made a simple component with a hardcoded color just for now.
+
+Lets go ahead and add this to our Card Component.
+
+``` jsx
+ return (
+      <div style={cardStyle}>
+        <Square/>
+      </div>
+    )
+```
+
+#### The Label component
+
+This is the component that will hold the text for what color it is, Lets go and make this.
+
+``` jsx
+    class Label extends React.Component{
+        render(){
+            var labelStyle={
+                fontFamily: "sans-serif",
+                fontWeight: "bold",
+                padding: 13,
+                margin: 0
+            };
+
+            return(
+                <p style={labelStyle}>#FF6663</p>
+            )
+        };
+        
+    }
+```
+
+Here we are simply creating a new style for our label with a good font and some weights also we have mentioned some padding so that everything looks cool.
+
+#### Lets pass some properties
+
+This view is now boring and lots of stuff are hardcoded we don't like this lets make them a bit more fun by passing in the color we can start from the Square by setting a color property there.
+
+``` jsx
+    class Square extends React.Component{
+        render(){
+            var squareStyle={
+                height: 150,
+                backgroundColor: this.props.color
+            };
+            return(
+                <div style={squareStyle}>
+                </div>
+            );
+        }
+    }
+```
+
+Here you can see I am passing in a props.color to the background color.
+
+Now lets make some changes in labels so that we can pass in the color hex there also.
+
+``` jsx
+    class Label extends React.Component{
+        render(){
+            var labelStyle={
+                fontFamily: "sans-serif",
+                fontWeight: "bold",
+                padding: 13,
+                margin: 0
+            };
+
+            return(
+                <p style={labelStyle}>{this.props.color}</p>
+            )
+        };
+        
+    }
+```
+
+Now for all this to come together lets make some modification in Card as well,
+
+``` jsx
+
+class Card extends React.Component {
+  render() {
+    var cardStyle = {
+      height: 200,
+      width: 150,
+      padding: 0,
+      backgroundColor: "#FFF",
+      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
+      filter: "drop-shadow(0px 0px 5px #666)"
+    };
+ 
+    return (
+      <div style={cardStyle}>
+        <Square color={this.props.color} />
+        <Label color={this.props.color}/>
+      </div>
+    )
+  }
+}
+
+```
+
+So here we are passing in the color property to both the Square and Label so that we can reuse this component by simply doing this,
+
+``` jsx
+   <div>
+            <Card color="#FFA737"/>
+
+        </div>,
+```
+Now we can see that the card changes the color based on the changes we make on the values here on the color property of the card.
+
+Here we are nesting some components inside components and we are making some really cool stuff using the properties of object oriented programming and help us do all the work easily. Finally this all transcribes into html css and js.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/complexComponents.html)
