@@ -660,3 +660,147 @@ Now we can see that the card changes the color based on the changes we make on t
 Here we are nesting some components inside components and we are making some really cool stuff using the properties of object oriented programming and help us do all the work easily. Finally this all transcribes into html css and js.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/complexComponents.html)
+
+
+## Transferring properties in react.
+
+As we have seen in the previous code that the transferring properties in React is kind of hard and we have to write repeated code in more and more components.
+We have to kind of traverse down the tree to figure out what is happening.
+
+What this kind of means is if we visualize our views as w tree then basically if we need to transfer a property from the parent to a nth child we need to write the code n time.
+
+
+Lets take a look at a sample for this.
+
+``` jsx
+
+class Display extends React.Component{
+  render(){
+    return(
+      <div>
+      <p>{this.props.color}</p>
+      <p>{this.props.num}</p>
+      <p>{this.props.size}</p>
+      </div>
+    );
+  }
+}
+
+class Labels extends React.Component{
+  render(){
+    return(
+      <div>
+      <Display color={this .props.color}
+                num={this.props.num}
+                size={this.props.size}
+          />
+      </div>
+    );
+  }
+}
+class Shirt extends React.Component{
+  render(){
+    return(
+      <div>
+      <Labels
+        color={this.props.color}
+        num={this.props.num}
+        size={this.props.size}
+      />
+      </div>
+    );
+  }
+}
+
+```
+
+and to render this to the ReactDOM we do 
+
+``` jsx
+ReactDOM.render(
+  <div>
+    <Shirt color="steelblue" num="3.14" size="medium" />
+  </div>,
+  document.querySelector("#container")
+);
+```
+
+See here what is happening is that The Shirt component depends on Label Component and the Label Component depend on the Display Component but for us too much work to write the same code again and again and if this is a big project we might end up messing up a lot of stuff.
+
+#### The Spread Operator
+
+In java script lets say we have a array of elements and we want to print it.
+``` javascript
+
+var items = ["1","2","3"];
+
+function printStuff(a,b,c){
+  console.log("printing" + a + " "+ b+ " "+c);
+}
+```
+
+and to print the items we can simply do something like
+
+``` javascript
+
+printStuff(item[0],item[1],item[2]);
+
+```
+
+This might seem simple enough but what if we had a simpler way of doing it introducing spread,
+
+``` javascript
+printStuff(...items);
+```
+
+Can we use the same approach to solve our issue with transferring properties ?
+
+Yes we can.
+
+``` jsx
+var props = {
+  color: "steelblue",
+  num: "3.14",
+  size: "medium"
+};
+```
+
+This is what our properties looks like inside a component So instead of manually referencing them we can use the spread function.
+
+
+``` jsx
+<Display {...this.props}/>
+``` 
+
+This will take care of our job.
+
+Let's modify the Label and Shirt class to use this feature.
+
+
+``` jsx
+class Labels extends React.Component{
+  render(){
+    return(
+      <div>
+      <Display {...this.props}
+          />
+      </div>
+    );
+  }
+}
+class Shirt extends React.Component{
+  render(){
+    return(
+      <div>
+      <Labels
+        {...this.props}
+      />
+      </div>
+    );
+  }
+}
+```
+
+Once this is done everything should work as normal, this is kind of a convenient way to do this but is it the best way probably not because having an intermediate component seems like a little bit too much, what if there was a way to transfer the properties without having to use an intermediate component this is called redux.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/transferingProperties.html)
