@@ -965,3 +965,184 @@ The problem is that we need to bind the _this_ value inside the timeTick so that
 This should do the trick and now the app is working.
 
 [Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/states.html)
+
+## Going from Data to UI
+
+Most of the time when we are making applications with React we are not gona use hard coded UI values and then call them to our screen instead we are more likely to transform some kind of data and then convert it to UI, this may be something simply like and array or even be something more like a data from an API.
+
+
+Lets start with a template code.
+
+``` jsx
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>From Data to UI</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div id="container"></div>
+ 
+  <script type="text/babel">
+    class Circle extends React.Component {
+      render() {
+        var circleStyle = {
+          padding: 10,
+          margin: 20,
+          display: "inline-block",
+          backgroundColor: this.props.bgColor,
+          borderRadius: "50%",
+          width: 100,
+          height: 100
+        };
+ 
+        return (
+          <div style={circleStyle}>
+          </div>
+        );
+      }
+    }
+ 
+    ReactDOM.render(
+      <div>
+        <Circle bgColor="#F9C240" />
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+</html>>
+```
+
+Here we are not doing much in the DOM render method we have a Square with a borderRadius made 50% which gives the circle effect. The value we are passing around is the background color property. 
+
+Now lets do something lets make a variable of with the circle component and call it inside our render method so and see if that works.
+
+
+``` jsx
+    var theCircle = <Circle bgColor="#F9C240"/>
+ 
+    ReactDOM.render(
+      <div>
+        {theCircle}
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+</html>>
+```
+
+Yes that works perfectly lets not forget to put the variable inside {} so that its evaluated as a jsx expression.
+
+Ok now that works how about we try to make a function and call that inside the render method.
+
+``` jsx
+
+function showCircle(){
+    var colors = ["#393E41", "#E94F37", "#1C89BF", "#A1D363"];
+    var ran = Math.floor(Math.random()*colors.length)
+
+    return <Circle bgColor={colors[ran]}/>
+}
+
+    ReactDOM.render(
+      <div>
+        {showCircle()}
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+</html>>
+```
+
+Wow that also works what i have done inside the function is define some random colors in an array and then use a variable which will have a random value which we can use to put in the array to get a random color.
+
+and we are calling this function inside the react DOM which would generate random circles every-time we refresh the browser.
+
+#### Dealing with Arrays
+
+one thing we can do to display lot of circles is to simply do this,
+
+``` jsx
+
+ReactDOM.render(
+  <div>
+    {showCircle()}
+    {showCircle()}
+    {showCircle()}
+  </div>,
+  document.querySelector("#container")
+);
+
+``` 
+
+but that is very redundant so what we can do is have an array of circle components and simply reference the array in the DOM render.
+
+Lets see how to do that.
+
+First lets define a bigger array,
+
+``` jsx
+var colors = ["#393E41", "#E94F37", "#1C89BF", "#A1D363",
+              "#85FFC7", "#297373", "#FF8552", "#A40E4C"];
+```
+
+Now lets define another array to push all our components.
+
+``` jsx
+var renderData = [];
+```
+
+In order to populate this array we can simply use a for loop iterate through the array of colors and push each values into the renderData array.
+
+``` jsx
+for(var i=0;i<colors.length;i++){
+    renderData.push(<Circle bgColor={colors[i]}/>);
+}
+
+
+    ReactDOM.render(
+      <div>
+        {renderData}
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+</html>>
+```
+
+I have also rendered this into the ReactDOM so that we can see if its working.
+
+Yup it works, although!!
+
+Warning: Each child in a list should have a unique "key" prop.
+
+_Check the top-level render call using <div>. See https://reactjs.org/link/warning-keys for more information.
+    at Circle (<anonymous>:15:5)_
+
+There is Warning in the console this is because react uses a key to reference each element in the DOM and these elements don't have any so lets provide it some.
+
+``` jsx
+for(var i=0;i<colors.length;i++){
+    renderData.push(<Circle key={i+colors[i]} bgColor={colors[i]}/>);
+}
+```
+
+Ok that should do it if we reload now the error should be gone.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/Data_UI.html)
