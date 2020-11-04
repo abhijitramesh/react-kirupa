@@ -1146,3 +1146,199 @@ for(var i=0;i<colors.length;i++){
 Ok that should do it if we reload now the error should be gone.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/Data_UI.html)
+
+## Lifecycle Methods in React
+
+React has lot of LifeCycle methods basically everything before the DOM is initialized to followed by the initialization fo the component the update of the component the removal of the component end even the destruction of the DOM everything is signified as some form or other or a lifecycle method.
+
+Lets look at a sample code to understand this component lifecycles.
+
+``` jsx
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Lifecycle Methods : Simple Counter</title>
+<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+<style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+    h1 {
+      font-family: sans-serif;
+      font-size: 72;
+      padding: 50px;
+      margin: 0;
+      border-radius: 5px;
+      background-color: #19647E;
+      color: #F4D35E;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  
+  <script type="text/babel">
+    class SimpleCounter extends React.Component {
+      constructor(props) {
+        super(props);
+    
+        this.state = {
+          count: 0
+        };
+
+        this.timerTick = this.timerTick.bind(this);
+      }
+    
+      timerTick() {
+        this.setState((prevState) => {
+          return { 
+            count: prevState.count + 1 
+          };
+        });
+      }
+    
+      componentDidMount() {
+        this.timer = setInterval(this.timerTick, 100);
+      }
+      
+      componentDidUpdate(prevProps, prevState) {
+        
+      }
+    
+      render() {
+        return (
+          <h1>{this.state.count}</h1>
+        );
+      }
+    }
+
+    ReactDOM.render(
+      <div>
+        <SimpleCounter />
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+
+</html>
+```
+
+This code is very similar to the the lightning counter we made earlier lets add some log functions in this to understand the lifecycle of the components.
+
+``` jsx
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Lifecycle Methods : Simple Counter</title>
+<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+<style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+    h1 {
+      font-family: sans-serif;
+      font-size: 72;
+      padding: 50px;
+      margin: 0;
+      border-radius: 5px;
+      background-color: #19647E;
+      color: #F4D35E;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  
+  <script type="text/babel">
+   class SimpleCounter extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      count: 0
+    };
+
+    this.timerTick = this.timerTick.bind(this);
+
+    console.log("Constructor!");
+  }
+
+  timerTick() {
+    this.setState((prevState) => {
+      return { 
+        count: prevState.count + 1 
+      };
+    });
+  }
+
+  componentDidMount() {
+    this.timer = setInterval(this.timerTick, 100);
+
+    console.log("Component has mounted!");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Component updated from: " + prevState.count);
+  }
+
+  render() {
+    console.log("SimpleCounter render call!");
+    
+    return (
+      <h1>{this.state.count}</h1>
+    );
+  }
+}
+
+ReactDOM.render(
+  <div>
+    <SimpleCounter />
+  </div>,
+  document.querySelector("#container")
+);
+  </script>
+</body>
+
+</html>
+```
+
+Here we have added logs in different parts of the code like in the constructor we have added a log stating that the component has been constructed further more we have added some more logs at componentDidMount and componentDidUpdate.
+
+Now if we run the code and check the log we will kind of get the understanding of what is happening to the components.
+
+To unmout the component lets add a condition check and when the counter is at 50 lets unmount the component and then log it as well.
+
+``` jsx
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Component updated from: " + prevState.count);
+
+    if (this.state.count == 50) {
+      ReactDOM.unmountComponentAtNode(document.querySelector("#container"));
+    }
+  }
+
+  componentWillUnmount() {
+    console.log("Component is about to be unmounted!");
+
+    clearInterval(this.timer);
+  }
+```
+
+Now if we check the logs we can see the whole lifecycle of the component.
+
+
+We don't need to memories all these lifecycle buts it good to know they are there so that we can use them as and when its required.
+
+[Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/Lifecycle.html)
