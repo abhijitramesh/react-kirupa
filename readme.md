@@ -1342,3 +1342,210 @@ Now if we check the logs we can see the whole lifecycle of the component.
 We don't need to memories all these lifecycle buts it good to know they are there so that we can use them as and when its required.
 
 [Full Code](https://github.com/abhijitramesh/react-kirupa/blob/main/Lifecycle.html)
+
+## Accessing React DOM elements
+
+Let' say we have a color pallet and one box where we can enter a value and when we do so and clicl on go the color changes of the pallet and then the value in the text box clears. How do we do this in react code, it must be hard to follow using old principles that is why we should use something known as DOM elements, let us take a look at some template code.
+
+``` jsx
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>The Colorizer!</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+ 
+    .colorSquare {
+      box-shadow: 0px 0px 25px 0px #333;
+      width: 242px;
+      height: 242px;
+      margin-bottom: 15px;
+    }
+ 
+    .colorArea input {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #CCC;
+    }
+ 
+    .colorArea button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      background-color: #666;
+      color: #FFF;
+      border: 2px solid #666;
+    }
+ 
+    .colorArea button:hover {
+      background-color: #111;
+      border-color: #111;
+      cursor: pointer;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div id="container"></div>
+  <script type="text/babel">
+ 
+    class Colorizer extends React.Component {
+      constructor(props, context) {
+      super(props, context);
+ 
+        this.state = {
+          color: "",
+          bgColor: "white"
+        };
+ 
+        this.colorValue = this.colorValue.bind(this);
+        this.setNewColor = this.setNewColor.bind(this);
+      }
+ 
+      colorValue(e) {
+        this.setState({ 
+          color: e.target.value 
+        });
+      }
+ 
+      setNewColor(e) {
+        this.setState({
+          bgColor: this.state.color
+        });
+ 
+        e.preventDefault();
+      }
+ 
+      render() {
+        var squareStyle = {
+          backgroundColor: this.state.bgColor
+        };
+ 
+        return (
+          <div className="colorArea">
+            <div style={squareStyle} className="colorSquare"></div>
+ 
+            <form onSubmit={this.setNewColor}>
+              <input onChange={this.colorValue}
+                placeholder="Enter a color value"></input>
+              <button type="submit">go</button>
+            </form>
+          </div>
+        );
+      }
+    }
+ 
+    ReactDOM.render(
+      <div>
+        <Colorizer />
+      </div>,
+      document.querySelector("#container")
+    );
+  </script>
+</body>
+ 
+</html>
+```
+
+#### Meet refs 
+
+Let's take a look at refs this is kind of a bridge between jsx and html lets use this in this example to make some sense of how refs works.
+
+Our goal here is to unfocus the box when the value is being changed and also to clear the value after every submission,
+
+Lets take a look at references
+
+``` jsx
+render() {
+  var squareStyle = {
+    backgroundColor: this.state.bgColor
+  };
+ 
+  var self = this;
+ 
+  return (
+    <div className="colorArea">
+      <div style={squareStyle} className="colorSquare"></div>
+ 
+      <form onSubmit={this.setNewColor}>
+        <input onChange={this.colorValue} 
+               ref={
+                 function(el) {
+                   self._input = el;
+                 }
+               }
+               placeholder="Enter a color value"></input>
+        <button type="submit">go</button>
+      </form>
+    </div>
+  );
+}
+```
+
+Here first we have referenced the self to be the this keyword and then we are using ref to call a function which would get called when our component mounts and reference to the final HTML DOM element is passed in as an argument. We are capturing this using the el reference and passing in these values as _input.
+
+Noe lets change in-order to change focus and reset values the code lives inside setNewColor(e) method lets go ahead and change that.
+
+``` jsx
+
+      setNewColor(e) {
+        this.setState({
+          bgColor: this.state.color
+        });
+        
+        this._input.focus();
+        this._input.value="";
+        e.preventDefault();
+      }
+```
+
+#### Portals
+
+Lets take a look at one more DOM trick that we can use called portals.
+
+Lets add a headings and some style on top of our pallet,
+
+``` jsx
+    #colorHeading {
+    padding: 0;
+    margin: 50px;
+    margin-bottom: -20px;
+    font-family: sans-serif;
+    }
+  </style>
+</head>
+ 
+<body>
+    <h1 id="colorHeading">Colorizer</h1>
+  <div id="container"></div>
+  <script type="text/babel">
+```
+
+What we are planning to do here is to change the heading to the name of the color we want.
+
+Let us add a color label component,
+
+``` jsx
+    var heading = document.querySelector("#colorHeading");
+    class ColorLabel extends React.Component{
+        render(){
+            return ReactDOM.createPortal(
+            ":"+this.props.color,
+            heading
+            );
+        }
+    }
+```
+
+Here we are doing here is first binding the color heading and the using the createPortal trick to edit the value such that we can add the color along with the pallet.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/DOM_Access.html)
