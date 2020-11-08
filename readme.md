@@ -1549,3 +1549,231 @@ Let us add a color label component,
 Here we are doing here is first binding the color heading and the using the createPortal trick to edit the value such that we can add the color along with the pallet.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/DOM_Access.html)
+
+## Events in React
+
+Most of the thing that we are doing until now mostly depends on the on page load and does not react to anything we do, most UI intense applications tend to use such interaction that is where Events come into play.
+
+As usual we have a basic code template to start with.
+
+``` jsx
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>Events</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div id="container"></div>
+  <script type="text/babel">
+   class Counter extends React.Component {
+  render() {
+    var textStyle = {
+      fontSize: 72,
+      fontFamily: "sans-serif",
+      color: "#333",
+      fontWeight: "bold"
+    };
+ 
+    return (
+      <div style={textStyle}>
+        {this.props.display}
+      </div>
+    );
+  }
+}
+ 
+class CounterParent extends React.Component {
+  constructor(props) {
+    super(props);
+ 
+    this.state = {
+      count: 0
+    };
+  }
+ 
+  render() {
+    var backgroundStyle = {
+      padding: 50,
+      backgroundColor: "#FFC53A",
+      width: 250,
+      height: 100,
+      borderRadius: 10,
+      textAlign: "center"
+    };
+ 
+    var buttonStyle = {
+      fontSize: "1em",
+      width: 30,
+      height: 30,
+      fontFamily: "sans-serif",
+      color: "#333",
+      fontWeight: "bold",
+      lineHeight: "3px"
+    };
+ 
+    return (
+      <div style={backgroundStyle}>
+        <Counter display={this.state.count} />
+        <button style={buttonStyle}>+</button>
+      </div>
+    );
+  }
+}
+ 
+ReactDOM.render(
+  <div>
+    <CounterParent />
+  </div>,
+  document.querySelector("#container")
+);
+  </script>
+</body>
+ 
+</html>
+```
+
+This is very basic stuff, the counter has some text and the counter parent is basically just a square all with some styles applied. We also have a + button on the dom render.
+
+Let us add a function to on click of the button.
+
+``` jsx
+
+retrun(
+  <div style={backgroundStyle}>
+  <Counter display={this.state.count}/>
+  <button onClick={this.increase} style={buttonStyle}>+</button>
+  </div>
+        );
+
+```
+
+Now that we have told react to call the on click function when the + button is clicked lets go ahead and implement increase function.
+
+``` jsx
+
+increase(e){
+  this.setState({
+    count: this.state.count +1
+  });
+}
+
+```
+also don't forget to bind the this.increase on the constructor.
+
+``` jsx
+constructor(props) {
+    super(props);
+ 
+    this.state = {
+      count: 0
+    };
+ 
+    this.increase = this.increase.bind(this);
+  }
+```
+
+
+In the increase function all we are doing is setting the count to be the count +1.
+
+#### Event properties 
+
+We pass in events as arguments into our event handler basically what this means is if i am passing in a mouse event we can deal with things like where in the screen are we clicking or if its a keyboard event what key i am pressing and so on.
+
+#### Meet Synthetic Events
+
+In React we are not dealing with the regular dom events we are dealing with ReactDOM events which are synthetic that is where synthetic events comes to play.
+
+Even thought how it works is different we are able to do everything we are able to do with SyntheticEvents same as in vanilla DOM events.
+
+Lets do some stuff with syntethic events like increase the count by 10 when we click with shift pressed.
+
+``` jsx
+
+increase(e){
+  var currentCount = this.state.cont;
+
+  if(e.shiftKey){
+    currentCount +=10;
+  }
+  else {
+    currentCount +=1;
+  }
+
+  this.setState({
+    count: currentCount
+  });
+}
+
+```
+
+Let us create another component for the plus button,
+
+``` jsx
+class PlusButton extends React.Components{
+  render(){
+    return(
+      <button>
+      +
+      </button>
+    );
+  }
+}
+
+```
+
+Now if we want to handle click on this we cannot do something like,
+
+``` jsx
+
+render(){
+  return(
+    <div>
+    <Counter display={this.state.count}/>
+    <PlusButton onClick={this.increase}/>
+    </div>
+  );
+
+}
+```
+This just wont work we need to do something more link this.
+
+``` jsx
+
+render(){
+  return(
+    <div>
+    <Counter display={this.state.count}/>
+    <PlusButton clickHandler={this.increase}/>
+    </div>
+  );
+}
+```
+here we are using an event listener,
+
+``` jsx
+class PlusButton extends React.Components{
+  render(){
+    return(
+      <button onClick={this.props.clickHandler}>
+      +
+      </button>
+    );
+  }
+}
+
+```
+
+Yup that should do the trick.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/Events.html)
