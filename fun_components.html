@@ -1,0 +1,67 @@
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>Events</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+  </style>
+</head>
+ 
+<body>
+  <div id="container"></div>
+  <script type="text/babel">
+  
+ class LightningCounter extends React.Component{
+     constructor(props){
+         super(props);
+
+         this.state={
+             strikes:0
+         };
+         this.timeTicker = this.timeTicker.bind(this);
+     }
+     timeTicker(){
+         this.setState({
+             strikes: this.state.strikes +100
+         });
+     }
+     componentDidMount(){
+         setInterval(this.timeTicker,1000);
+     }
+     render(){
+    var counterStyle = {
+      color: "#66FFFF",
+      fontSize: 50
+    };
+ 
+    var count = this.state.strikes.toLocaleString();
+ 
+    return (
+      <h1 style={counterStyle}>{count}</h1>
+    );
+  }
+ }
+function SimpleMessage(props){
+     return <p>Message is : {props.message}!</p>;
+ }
+ var Hello = ({message}) => <p>  {message}!</p>;
+ 
+ReactDOM.render(
+  <div>
+    <LightningCounter/>
+    <SimpleMessage message="Functions are back in style!"/>
+    <Hello message= "Hi there"/>
+  </div>,
+  document.querySelector("#container")
+);
+  </script>
+</body>
+ 
+</html>
