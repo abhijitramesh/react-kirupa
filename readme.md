@@ -1777,3 +1777,106 @@ class PlusButton extends React.Components{
 Yup that should do the trick.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/Events.html)
+
+## Stateless Functional Components
+
+Writing components is good and all and it makes us understand the idea behind the working of the react application but it is not necessary to write such long code to do something so simple that is where Functional components come to play.
+
+This is the style we are used to writing.
+
+``` jsx
+
+class LightningCounter extends React.Compoent{
+  constructor(props){
+    super(props);
+    this.state={
+      strikes:0
+    };
+    this.timerTick = this.timerTick.bind(this);
+  }
+
+  timerTick(){
+    this.setState({
+      strikes: this.state.strikes+100;
+    });
+  }
+  componentDidMount(){
+    setInterval(this.timerTick,1000);
+  }
+  render(){
+    var conunterStyle ={
+      color: "#66FFF,
+      fontSize:50
+    };
+
+    var count = this.state.strikes.toLocalString();
+
+    return(
+      <h1 style={counterStyle}>{count}</h1>
+    );
+  }
+}
+
+```
+
+This kind of definition is nice if this component is a main part of our application but what if this does not contribute much to the application for example lets say,
+
+``` jsx
+class SimpleMessage extends React.Componet{
+  return(
+    <p>Message is: {this.props.message}</p>;
+  );
+}
+```
+
+This is too much to follow the class based method instead we can do a functional component like,
+``` jsx
+function SimpleMessage(props){
+  return <p>Message is: {pops.message}!</p>;
+}
+```
+
+I know this is too simple for you to think it works but behind the scene react will do exactly what normal components would be rendered.
+
+``` jsx
+ReactDOM.render(
+  <div>
+  <SimpleMessage message="Functions are back in style!"/>
+  </div>
+  document.querySelector("#container")
+);
+```
+
+What we cannot do with this method is using lifecycle methods and stuff.
+
+we ned not necessary use the prop keyword here lets go for jello also,
+
+``` jsx
+function HelloSomething(jello) {
+  return <p>Hello, {jello.target}!</p>;
+}
+``` 
+
+works well if we want to access context elements we can do this,
+
+``` jsx
+function HelloSomething(props, context) {
+  return <p>Hello, {props.target}!</p>;
+}
+```
+
+ok that is cool and compact wanna be cooler lets get rid of function and return as well :P
+
+``` jsx
+var SimpleMessage = (props) => <p>Message is {pops.message}!</p>;
+```
+
+ah don't even use the props keyword
+
+``` jsx
+var SimpleMessage = {(message}) => <p>Message is {message}!</p>;
+```
+
+We can do much cooler stuff but lets stop there for now.
+
+[full code](https://github.com/abhijitramesh/react-kirupa/blob/main/fun_components.html)
