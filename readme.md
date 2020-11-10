@@ -1880,3 +1880,10 @@ var SimpleMessage = {(message}) => <p>Message is {message}!</p>;
 We can do much cooler stuff but lets stop there for now.
 
 [full code](https://github.com/abhijitramesh/react-kirupa/blob/main/fun_components.html)
+
+
+### SetUp React Environment
+
+From this point we will be using a create react app environment to do out builds.
+
+[hello world app](https://github.com/abhijitramesh/react-kirupa/tree/main/helloworld) 
