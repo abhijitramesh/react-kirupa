@@ -1,13 +1,14 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import ReactDom from "react-dom"
 import "./index.css"
-import TodoList from "./Todolist"
+import TodoList from "./TodoList";
 
 var destiantion = document.querySelector("#container");
 
-ReactDOM.render(
-  <div>
-      <TodoList/>
-  </div>,
-  destiantion  
-);
+
+ReactDom.render(
+    <div>
+        <TodoList/>
+        </div>,
+        destiantion
+)

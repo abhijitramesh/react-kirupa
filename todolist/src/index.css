@@ -1,10 +1,9 @@
-body{
+body {
     padding: 50px;
     background-color: #66CCFF;
     font-family: sans-serif;
-}
-
-#container{
+  }
+  #container {
     display: flex;
-    justify-content: flex;
-}
+    justify-content: center;
+  }
