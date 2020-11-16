@@ -26,6 +26,7 @@ class MenuContainer extends Component{
 
 
     render(){
+        console.log("Rendering: Menucontainer");
         return(
             <div>
                 <div>
